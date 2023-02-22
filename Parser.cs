@@ -2,6 +2,7 @@ namespace Homebrew
 {
 	public class Parser
 	{
+		public SpellList SpellList = new SpellList();
 		public List<Spell> Spells {get; private set;}
 		
 		public Parser()
@@ -54,7 +55,7 @@ namespace Homebrew
 			
 			if (data.Length < 10)
 			{
-				Console.WriteLine("Line cannot be formatted.");
+				Console.WriteLine($"Line cannot be formatted, length is '{data.Length}'.");
 				return null;
 			}
 			
@@ -81,6 +82,68 @@ namespace Homebrew
 				Source = data[9],
 				Description = description.ToArray(),
 			};
+		}
+		
+		public void ParseSpellList(string filePath)
+		{
+			string[] lines = GetFileContents(filePath);
+			string[,] data = FormatSpellListData(lines);
+			
+			for (int i = 0; i < data.GetLength(0); i++)
+			{
+				ParseSpellListColumn(data, i);
+			}
+		}
+		
+		private string[,] FormatSpellListData(string[] lines)
+		{
+			int width = 9;
+			
+			string[,] data = new string[width, lines.Length];
+			
+			for (int i = 0; i < data.GetLength(1); i++)
+			{
+				string[] lineData = lines[i].Split('\t');
+				
+				if (lineData.Length != width)
+				{
+					Console.WriteLine($"Could not parse line '{i}' of spell list file.");
+					continue;
+				}
+				
+				for (int k = 0; k < data.GetLength(0); k++)
+				{
+					data[k, i] = lineData[k];
+				}
+			}
+			
+			return data;
+		}
+		
+		private void ParseSpellListColumn(string[,] data, int column)
+		{
+			string key = data[column, 0];
+			int level = 0;
+			
+			for (int i = 2; i < data.GetLength(1); i++)
+			{
+				string value = data[column, i];
+				int newLevel;
+				
+				if (string.IsNullOrWhiteSpace(value))
+				{
+					continue;
+				}
+				
+				if (int.TryParse(value, out newLevel))
+				{
+					level = newLevel;
+				}
+				else
+				{
+					SpellList.AddSpell(key, level, value);
+				}
+			}
 		}
 	}
 }
