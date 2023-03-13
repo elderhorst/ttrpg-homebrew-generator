@@ -61,4 +61,13 @@ namespace Homebrew
 			Spells[key][level].Add(spell);
 		}
 	}
+	
+	public class MagicItem
+	{
+		public string Name;
+		public string Rarity;
+		public string Type;
+		public bool Attunement;
+		public string[] Description;
+	}
 }

@@ -4,7 +4,13 @@ namespace Homebrew
 	{
 		public static string FormatNumber(string number)
 		{
-			number = number.Trim();
+			number = number.Trim().ToLower();
+			
+			if (number.Equals("cantrip") || number.Equals("0"))
+			{
+				return "cantrip";
+			}
+			
 			char value = number[number.Length - 1];
 			
 			switch (value)

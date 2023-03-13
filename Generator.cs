@@ -16,41 +16,15 @@ namespace Homebrew
 			File.WriteAllText(path, builder.ToString());
 		}
 		
-		public void AddSpells(List<Spell> spells)
+		public void AddMarkdown(string path)
 		{
-			builder.AppendLine("## Spells");
-			builder.AppendLine();
-			
-			for (int i = 0; i < spells.Count; i++)
+			if (File.Exists(path))
 			{
-				AddSpell(spells[i]);
+				builder.AppendLine(File.ReadAllText(path));
 			}
-			
-			builder.AppendLine("\\page");
-		}
-		
-		private void AddSpell(Spell spell)
-		{
-			builder.AppendLine($"#### {spell.Name}");
-			builder.AppendLine($"*{Utility.FormatNumber(spell.Level)}-level {spell.School.ToLower()}" + ((spell.Ritual) ? " (ritual)" : string.Empty) + "*");
-			builder.AppendLine();
-			builder.AppendLine($"**Casting Time:** :: {spell.CastingTime}");
-			builder.AppendLine($"**Range:** :: {spell.Range}");
-			builder.AppendLine($"**Components:** :: {spell.Components}");
-			builder.AppendLine($"**Duration:** :: {spell.Duration}" + ((spell.Concentration) ? ", concentration" : string.Empty));
-			builder.AppendLine();
-			
-			for (int i = 0; i < spell.Description.Length; i++)
+			else
 			{
-				string text = spell.Description[i];
-				
-				if (text.Contains("At Higher Levels:"))
-				{
-					text = text.Replace("At Higher Levels:", "**At Higher Levels:**");
-				}
-				
-				builder.AppendLine(text);
-				builder.AppendLine();
+				Console.WriteLine($"Markdown file at '{path}' does not exist.");
 			}
 		}
 		
@@ -91,6 +65,77 @@ namespace Homebrew
 			}
 			
 			builder.AppendLine();
+		}
+		
+		public void AddSpells(List<Spell> spells)
+		{
+			builder.AppendLine("## Spells");
+			builder.AppendLine();
+			
+			for (int i = 0; i < spells.Count; i++)
+			{
+				AddSpell(spells[i]);
+			}
+			
+			builder.AppendLine("\\page");
+		}
+		
+		private void AddSpell(Spell spell)
+		{
+			builder.AppendLine($"#### {spell.Name}");
+			builder.AppendLine(GetSpellLevelLine(spell));
+			builder.AppendLine();
+			builder.AppendLine($"**Casting Time:** :: {spell.CastingTime}");
+			builder.AppendLine($"**Range:** :: {spell.Range}");
+			builder.AppendLine($"**Components:** :: {spell.Components}");
+			builder.AppendLine($"**Duration:** :: {spell.Duration}" + ((spell.Concentration) ? ", concentration" : string.Empty));
+			builder.AppendLine();
+			
+			for (int i = 0; i < spell.Description.Length; i++)
+			{
+				string text = spell.Description[i];
+				
+				if (text.Contains("At Higher Levels:"))
+				{
+					text = text.Replace("At Higher Levels:", "**At Higher Levels:**");
+				}
+				
+				builder.AppendLine(text);
+				builder.AppendLine();
+			}
+		}
+		
+		private string GetSpellLevelLine(Spell spell)
+		{
+			string level = (spell.Level.ToLower().Equals("cantrip")) ? "cantrip" : $"*{Utility.FormatNumber(spell.Level)}-level";
+			
+			return $"*{level} {spell.School.ToLower()}" + ((spell.Ritual) ? " (ritual)" : string.Empty) + "*";
+		}
+		
+		public void AddMagicItems(List<MagicItem> magicItems)
+		{
+			builder.AppendLine("## Magic Items");
+			builder.AppendLine();
+			
+			for (int i = 0; i < magicItems.Count; i++)
+			{
+				AddMagicItem(magicItems[i]);
+			}
+			
+			builder.AppendLine("\\page");
+		}
+		
+		private void AddMagicItem(MagicItem item)
+		{
+			builder.AppendLine($"#### {item.Name}");
+			builder.AppendLine($"*{item.Type}, {item.Rarity}" + ((item.Attunement) ? " (requires attunement)*" : "*"));
+			builder.AppendLine(":");
+			
+			for (int i = 0; i < item.Description.Length; i++)
+			{
+				builder.AppendLine(item.Description[i]);
+				builder.AppendLine();
+			}
 		}
 	}
 }

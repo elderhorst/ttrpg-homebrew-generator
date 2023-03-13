@@ -4,10 +4,12 @@ namespace Homebrew
 	{
 		public SpellList SpellList = new SpellList();
 		public List<Spell> Spells {get; private set;}
+		public List<MagicItem> MagicItems {get; private set;}
 		
 		public Parser()
 		{
 			Spells = new List<Spell>();
+			MagicItems = new List<MagicItem>();
 		}
 		
 		private string[] GetFileContents(string filePath)
@@ -144,6 +146,50 @@ namespace Homebrew
 					SpellList.AddSpell(key, level, value);
 				}
 			}
+		}
+		
+		public void ParseMagicItems(string filePath)
+		{
+			string[] lines = GetFileContents(filePath);
+			
+			for (int i = 1; i < lines.Length; i++)
+			{
+				MagicItem? magicItem = ParseMagicItem(lines[i]);
+				
+				if (magicItem != null)
+				{
+					MagicItems.Add(magicItem);
+				}
+			}
+		}
+		
+		private MagicItem? ParseMagicItem(string line)
+		{
+			string[] data = line.Split('\t');
+			
+			if (data.Length < 4)
+			{
+				Console.WriteLine($"Line cannot be formatted, length is '{data.Length}'.");
+				return null;
+			}
+			
+			List<string> description = new List<string>();
+			for (int i = 4; i < data.Length; i++)
+			{
+				if (!string.IsNullOrWhiteSpace(data[i]))
+				{
+					description.Add(data[i]);
+				}
+			}
+			
+			return new MagicItem
+			{
+				Name = data[0],
+				Rarity = data[1],
+				Type = data[2],
+				Attunement = data[3].Equals("y"),
+				Description = description.ToArray(),
+			};
 		}
 	}
 }
