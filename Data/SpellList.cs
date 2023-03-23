@@ -1,20 +1,5 @@
 namespace Homebrew
 {
-	public class Spell
-	{
-		public string Name;
-		public string Level;
-		public string School;
-		public bool Ritual;
-		public bool Concentration;
-		public string CastingTime;
-		public string Range;
-		public string Components;
-		public string Duration;
-		public string Source;
-		public string[] Description;
-	}
-	
 	public class SpellList
 	{
 		public Dictionary<string, List<string>[]> Spells {get; private set;}
@@ -60,14 +45,5 @@ namespace Homebrew
 			
 			Spells[key][level].Add(spell);
 		}
-	}
-	
-	public class MagicItem
-	{
-		public string Name;
-		public string Rarity;
-		public string Type;
-		public bool Attunement;
-		public string[] Description;
 	}
 }
