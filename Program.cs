@@ -13,7 +13,7 @@ Console.WriteLine("Generating document...");
 
 Generator generator = new Generator();
 
-generator.AddMarkdown("Elder Introduction.md");
+generator.AddMarkdown("Pregenerated/Elder Introduction.md");
 generator.AddSpellList(parser.SpellList);
 generator.AddSpells(parser.Spells);
 generator.AddMagicItems(parser.MagicItems);
