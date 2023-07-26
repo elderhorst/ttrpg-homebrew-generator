@@ -6,10 +6,14 @@ namespace Homebrew
 		public List<Spell> Spells {get; private set;}
 		public List<MagicItem> MagicItems {get; private set;}
 		
+		private Dictionary<string, List<string>> _spellClassMap;
+		
 		public Parser()
 		{
 			Spells = new List<Spell>();
 			MagicItems = new List<MagicItem>();
+			
+			_spellClassMap = new Dictionary<string, List<string>>();
 		}
 		
 		private string[] GetFileContents(string filePath)
@@ -144,6 +148,35 @@ namespace Homebrew
 				else
 				{
 					SpellList.AddSpell(key, level, value);
+					AddToSpellListMap(value, key);
+				}
+			}
+		}
+		
+		private void AddToSpellListMap(string spell, string className)
+		{
+			if (!_spellClassMap.Keys.Contains(spell))
+			{
+				_spellClassMap.Add(spell, new List<string>());
+			}
+			
+			_spellClassMap[spell].Add(className);
+		}
+		
+		public void AddClassesToSpells()
+		{
+			foreach (var data in _spellClassMap)
+			{
+				string name = data.Key;
+				
+				for (int i = 0; i < Spells.Count; i++)
+				{
+					if (Spells[i].Name.Equals(name))
+					{
+						data.Value.Sort();
+						Spells[i].Classes = data.Value.ToArray();
+						break;
+					}
 				}
 			}
 		}

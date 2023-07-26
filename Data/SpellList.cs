@@ -29,6 +29,7 @@ namespace Homebrew
 			}
 		}
 		
+		// Class, Level, Spell
 		public void AddSpell(string key, int level, string spell)
 		{
 			if (!Spells.ContainsKey(key))

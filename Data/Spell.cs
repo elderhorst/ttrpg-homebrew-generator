@@ -12,6 +12,7 @@ namespace Homebrew
 		public string Components = default!;
 		public string Duration = default!;
 		public string Source = default!;
+		public string[] Classes = default!;
 		public string[] Description = default!;
 	}
 	

@@ -30,7 +30,7 @@ namespace Homebrew
 		
 		public void AddSpellList(SpellList spellList)
 		{
-			builder.AppendLine("## Spell List");
+			builder.AppendLine("# Spell List");
 			builder.AppendLine();
 			builder.AppendLine("{{spellList,wide");
 			
@@ -40,6 +40,8 @@ namespace Homebrew
 			}
 			
 			builder.AppendLine("}}");
+			builder.AppendLine("{{pageNumber,auto}}");
+			builder.AppendLine("{{footnote Chapter 2 | Spell List}}");
 			builder.AppendLine("\\page");
 		}
 		
@@ -69,7 +71,7 @@ namespace Homebrew
 		
 		public void AddSpells(List<Spell> spells)
 		{
-			builder.AppendLine("## Spells");
+			builder.AppendLine("# Spells");
 			builder.AppendLine();
 			
 			for (int i = 0; i < spells.Count; i++)
@@ -77,6 +79,8 @@ namespace Homebrew
 				AddSpell(spells[i]);
 			}
 			
+			builder.AppendLine("{{pageNumber,auto}}");
+			builder.AppendLine("{{footnote Chapter 3 | Spells}}");
 			builder.AppendLine("\\page");
 		}
 		
@@ -84,7 +88,8 @@ namespace Homebrew
 		{
 			builder.AppendLine($"#### {spell.Name}");
 			builder.AppendLine(GetSpellLevelLine(spell));
-			builder.AppendLine();
+			builder.AppendLine($"*{string.Join(", ", spell.Classes)}* ::");
+			builder.AppendLine(":");
 			builder.AppendLine($"**Casting Time:** :: {spell.CastingTime}");
 			builder.AppendLine($"**Range:** :: {spell.Range}");
 			builder.AppendLine($"**Components:** :: {spell.Components}");
@@ -107,14 +112,14 @@ namespace Homebrew
 		
 		private string GetSpellLevelLine(Spell spell)
 		{
-			string level = (spell.Level.ToLower().Equals("cantrip")) ? "cantrip" : $"*{Utility.FormatNumber(spell.Level)}-level";
+			string level = (spell.Level.ToLower().Equals("cantrip")) ? "cantrip" : $"{Utility.FormatNumber(spell.Level)}-level";
 			
-			return $"*{level} {spell.School.ToLower()}" + ((spell.Ritual) ? " (ritual)" : string.Empty) + "*";
+			return $"*{level} {spell.School.ToLower()}" + ((spell.Ritual) ? " (ritual)" : string.Empty) + "* ::";
 		}
 		
 		public void AddMagicItems(List<MagicItem> magicItems)
 		{
-			builder.AppendLine("## Magic Items");
+			builder.AppendLine("# Magic Items");
 			builder.AppendLine();
 			
 			for (int i = 0; i < magicItems.Count; i++)
@@ -122,6 +127,8 @@ namespace Homebrew
 				AddMagicItem(magicItems[i]);
 			}
 			
+			builder.AppendLine("{{pageNumber,auto}}");
+			builder.AppendLine("{{footnote Chapter 4 | Magic Items}}");
 			builder.AppendLine("\\page");
 		}
 		
